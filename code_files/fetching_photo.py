@@ -1,8 +1,10 @@
 import requests
-import json
 
 
 def get_topics(url, page_nr):
+    """
+    This function receives the list of topics present on the server.
+    """
     formatted_url = url.format(page_nr=page_nr)
     response = requests.get(formatted_url).json()
     list_of_topics = [Topic(topic) for topic in response]
@@ -10,6 +12,14 @@ def get_topics(url, page_nr):
 
 
 class Topic:
+    """
+    Every object of the Topic class stores:
+    an id,
+    a title,
+    the number of photos in it.
+    TODO:
+    1. When GUI implemented, also store a link to a thumbnail for the topic.
+    """
     def __init__(self, data):
         self._id = data['id']
         self._title = data['title']
@@ -23,8 +33,3 @@ class Topic:
 
     def nr_of_photos(self):
         return self._nr_of_photos
-
-
-with open("api.json") as file:
-    data = json.load(file)
-    get_topics(data['url'], "1")
