@@ -1,12 +1,12 @@
 import requests
+# import json
 
 
-def get_topics(url, page_nr):
+def get_topics(url):
     """
     This function receives the list of topics present on the server.
     """
-    formatted_url = url.format(page_nr=page_nr)
-    response = requests.get(formatted_url).json()
+    response = requests.get(url).json()
     list_of_topics = [Topic(topic) for topic in response]
     return list_of_topics
 
