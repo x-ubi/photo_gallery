@@ -25,6 +25,9 @@ class Topic:
         self._title = data['title']
         self._nr_of_photos = data['total_photos']
 
+    def __str__(self):
+        return self._title
+
     def id(self):
         return self._id
 
