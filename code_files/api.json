@@ -1,3 +1,4 @@
 {
-"url": "https://api.unsplash.com/topics?client_id=-hpd125zy8DilndMtKzI2ueQg7zpgagq4nTSbR7osUM;per_page=100"
+"topic-fetching-url": "https://api.unsplash.com/topics?client_id=-hpd125zy8DilndMtKzI2ueQg7zpgagq4nTSbR7osUM;per_page=100",
+"photo-fetching-url": "https://api.unsplash.com/topics/{given_id}/photos?client_id=-hpd125zy8DilndMtKzI2ueQg7zpgagq4nTSbR7osUM"
 }
