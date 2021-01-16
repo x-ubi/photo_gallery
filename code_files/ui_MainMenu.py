@@ -13,50 +13,50 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        if not MainWindow.objectName():
-            MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(812, 692)
-        self.action_Open = QAction(MainWindow)
+class Ui_MainMenu(object):
+    def setupUi(self, MainMenu):
+        if not MainMenu.objectName():
+            MainMenu.setObjectName(u"MainMenu")
+        MainMenu.resize(812, 692)
+        self.action_Open = QAction(MainMenu)
         self.action_Open.setObjectName(u"action_Open")
-        self.action_New_Gallery = QAction(MainWindow)
+        self.action_New_Gallery = QAction(MainMenu)
         self.action_New_Gallery.setObjectName(u"action_New_Gallery")
-        self.action_Collage = QAction(MainWindow)
+        self.action_Collage = QAction(MainMenu)
         self.action_Collage.setObjectName(u"action_Collage")
-        self.action_Edit_photos = QAction(MainWindow)
+        self.action_Edit_photos = QAction(MainMenu)
         self.action_Edit_photos.setObjectName(u"action_Edit_photos")
-        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget = QWidget(MainMenu)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QStatusBar(MainWindow)
+        MainMenu.setCentralWidget(self.centralwidget)
+        self.statusbar = QStatusBar(MainMenu)
         self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 812, 20))
-        self.menuMenu = QMenu(self.menubar)
-        self.menuMenu.setObjectName(u"menuMenu")
-        MainWindow.setMenuBar(self.menubar)
+        MainMenu.setStatusBar(self.statusbar)
+        self.menu = QMenuBar(MainMenu)
+        self.menu.setObjectName(u"menu")
+        self.menu.setGeometry(QRect(0, 0, 812, 20))
+        self.Options = QMenu(self.menu)
+        self.Options.setObjectName(u"Options")
+        MainMenu.setMenuBar(self.menu)
 
-        self.menubar.addAction(self.menuMenu.menuAction())
-        self.menuMenu.addAction(self.action_New_Gallery)
-        self.menuMenu.addAction(self.action_Collage)
-        self.menuMenu.addAction(self.action_Edit_photos)
+        self.menu.addAction(self.Options.menuAction())
+        self.Options.addAction(self.action_New_Gallery)
+        self.Options.addAction(self.action_Collage)
+        self.Options.addAction(self.action_Edit_photos)
 
-        self.retranslateUi(MainWindow)
+        self.retranslateUi(MainMenu)
 
-        QMetaObject.connectSlotsByName(MainWindow)
+        QMetaObject.connectSlotsByName(MainMenu)
     # setupUi
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.action_Open.setText(QCoreApplication.translate("MainWindow", u"&Open...", None))
-        self.action_New_Gallery.setText(QCoreApplication.translate("MainWindow", u"&New Gallery", None))
-        self.action_Collage.setText(QCoreApplication.translate("MainWindow", u"&Collage", None))
-        self.action_Edit_photos.setText(QCoreApplication.translate("MainWindow", u"&Edit photos", None))
-        self.menuMenu.setTitle(QCoreApplication.translate("MainWindow", u"Menu", None))
+    def retranslateUi(self, MainMenu):
+        MainMenu.setWindowTitle(QCoreApplication.translate("MainMenu", u"Main Menu", None))
+        self.action_Open.setText(QCoreApplication.translate("MainMenu", u"&Open...", None))
+        self.action_New_Gallery.setText(QCoreApplication.translate("MainMenu", u"&New Gallery", None))
+        self.action_Collage.setText(QCoreApplication.translate("MainMenu", u"&Collage", None))
+        self.action_Edit_photos.setText(QCoreApplication.translate("MainMenu", u"&Edit photos", None))
+        self.Options.setTitle(QCoreApplication.translate("MainMenu", u"Menu", None))
     # retranslateUi
 
