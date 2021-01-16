@@ -14,10 +14,11 @@ class GalleryWindow(QMainWindow):
         self.ui.action_New_Gallery.triggered.connect(self.new_gallery)
 
     def new_gallery(self):
-
-        dialog = GalleryDialog(self)
-        if dialog.exec_():
-            pass
+        creation_dialog = GalleryDialog(self)
+        if creation_dialog.exec_():
+            save_dialog = SaveGallery(self)
+            if save_dialog.exec_():
+                pass
 
 
 class GalleryDialog(QDialog):
@@ -34,6 +35,14 @@ class GalleryDialog(QDialog):
             list_of_topics = get_topics(url_topics)
         for topic in list_of_topics:
             self.ui.topicsList.addItem(str(topic))
+
+
+class SaveGallery(QFileDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFileMode(QFileDialog.Directory)
+        self.setAcceptMode(QFileDialog.AcceptSave)
+        self.setOption(QFileDialog.ShowDirsOnly, True)
 
 
 def guiMain(args):
