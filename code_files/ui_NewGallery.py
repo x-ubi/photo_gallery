@@ -49,7 +49,7 @@ class Ui_NewGallery(object):
         self.spinBox.setButtonSymbols(QAbstractSpinBox.UpDownArrows)
         self.spinBox.setCorrectionMode(QAbstractSpinBox.CorrectToPreviousValue)
         self.spinBox.setMinimum(3)
-        self.spinBox.setMaximum(100)
+        self.spinBox.setMaximum(30)
 
         self.gridLayout.addWidget(self.spinBox, 6, 1, 1, 1)
 
@@ -84,6 +84,6 @@ class Ui_NewGallery(object):
     def retranslateUi(self, NewGallery):
         NewGallery.setWindowTitle(QCoreApplication.translate("NewGallery", u"New Gallery", None))
         self.label.setText(QCoreApplication.translate("NewGallery", u"Choose a topic:", None))
-        self.label_2.setText(QCoreApplication.translate("NewGallery", u"Choose number of photos:", None))
+        self.label_2.setText(QCoreApplication.translate("NewGallery", u"Choose number of photos (3-30):", None))
     # retranslateUi
 
