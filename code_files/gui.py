@@ -2,8 +2,10 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
 import sys
 from ui_MainMenu import Ui_MainMenu
 from ui_NewGallery import Ui_NewGallery
+from ui_NewCollage import Ui_NewCollage
 from fetching_topic import get_topics
 from fetching_photos import fetch_photos_of_topic
+from PIL import Image
 import json
 import requests
 
@@ -14,6 +16,7 @@ class GalleryWindow(QMainWindow):
         self.ui = Ui_MainMenu()
         self.ui.setupUi(self)
         self.ui.action_New_Gallery.triggered.connect(self.new_gallery)
+        self.ui.action_Collage.triggered.connect(self.collage)
 
     def new_gallery(self):
         creation_dialog = GalleryDialog(self)
@@ -27,6 +30,14 @@ class GalleryWindow(QMainWindow):
             if save_dialog.exec_():
                 selected_folder = save_dialog.selected_folder()
                 download_photos(selected_folder, list_of_photos)
+
+    def collage(self):
+        creation_dialog = CollageDialog(self)
+        if creation_dialog.exec_():
+            chosen_gallery = creation_dialog.chosen_gallery
+            save_dialog = SaveCollage(self)
+            if save_dialog.exec_():
+                pass
 
 
 class GalleryDialog(QDialog):
@@ -42,6 +53,21 @@ class GalleryDialog(QDialog):
         return self.list_of_topics
 
 
+class CollageDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_NewCollage()
+        self.ui.setupUi(self)
+        self.ui.chooseDir.clicked.connect(self.choose_gallery)
+
+    def choose_gallery(self):
+        choose_dir = OpenGallery(self)
+        if choose_dir.exec_():
+            self.chosen_gallery = choose_dir.selected_folder()
+            self.ui.Directory.setPlainText(self.chosen_gallery)
+            return self.chosen_gallery
+
+
 class SaveGallery(QFileDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -50,7 +76,29 @@ class SaveGallery(QFileDialog):
         self.setOption(QFileDialog.ShowDirsOnly, True)
 
     def selected_folder(self):
+        # self.folderName = QFileDialog.getSaveFileName(self, self.tr("Choose folder"),"",tr("Directory")
         return self.selectedFiles()[0]
+
+
+class OpenGallery(QFileDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFileMode(QFileDialog.Directory)
+        self.setAcceptMode(QFileDialog.AcceptOpen)
+        self.setOption(QFileDialog.ShowDirsOnly, True)
+
+    def selected_folder(self):
+        return self.selectedFiles()[0]
+
+
+class SaveCollage(QFileDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.fileName = QFileDialog.getSaveFileName(self,
+                                                    self.tr("Save As"), "",
+                                                    self.tr("Images (*.jpg)"))
+
+
 
 
 def get_data_from_json_file():
