@@ -5,7 +5,7 @@ from ui_NewGallery import Ui_NewGallery
 from ui_NewCollage import Ui_NewCollage
 from fetching_topic import get_topics
 from fetching_photos import fetch_photos_of_topic
-from PIL import Image
+from collage_maker import collage
 import json
 import requests
 
@@ -37,7 +37,10 @@ class GalleryWindow(QMainWindow):
             chosen_gallery = creation_dialog.chosen_gallery
             save_dialog = SaveCollage(self)
             if save_dialog.exec_():
-                pass
+                collage(chosen_gallery,
+                        save_dialog.get_filename(),
+                        save_dialog.ui.NoOfRows.value(),
+                        save_dialog.ui.NoOfPics.list_of_pics_per_row())
 
 
 class GalleryDialog(QDialog):
@@ -59,6 +62,7 @@ class CollageDialog(QDialog):
         self.ui = Ui_NewCollage()
         self.ui.setupUi(self)
         self.ui.chooseDir.clicked.connect(self.choose_gallery)
+        self.ui.photosNumber.valueChanged.connect(self.change_noofrows_value)
 
     def choose_gallery(self):
         choose_dir = OpenGallery(self)
@@ -66,6 +70,16 @@ class CollageDialog(QDialog):
             self.chosen_gallery = choose_dir.selected_folder()
             self.ui.Directory.setPlainText(self.chosen_gallery)
             return self.chosen_gallery
+
+    def change_noofrows_value(self):
+        self.ui.NoOfRows.setMaximum(self.ui.photosNumber.value())
+
+    def list_of_pics_per_row(self):
+        self.list_pics_per_row = [int(number)
+                                  for number
+                                  in self.ui.NoOfPics.toPlainText().split(", ")
+                                  ]
+        return self.list_pics_per_row
 
 
 class SaveGallery(QFileDialog):
@@ -76,7 +90,6 @@ class SaveGallery(QFileDialog):
         self.setOption(QFileDialog.ShowDirsOnly, True)
 
     def selected_folder(self):
-        # self.folderName = QFileDialog.getSaveFileName(self, self.tr("Choose folder"),"",tr("Directory")
         return self.selectedFiles()[0]
 
 
@@ -98,7 +111,8 @@ class SaveCollage(QFileDialog):
                                                     self.tr("Save As"), "",
                                                     self.tr("Images (*.jpg)"))
 
-
+    def get_filename(self):
+        return self.fileName
 
 
 def get_data_from_json_file():
@@ -126,7 +140,7 @@ def photos_list(given_id, given_number, given_page):
 
 def download_photos(selected_folder, list_of_photos):
     for photo in list_of_photos:
-        photo_download_url = photo['urls']['full']
+        photo_download_url = photo['urls']['regular']
         downloaded_photo = requests.get(photo_download_url,
                                         allow_redirects=True)
         open(f"{selected_folder}/photo{list_of_photos.index(photo)}.jpg",
