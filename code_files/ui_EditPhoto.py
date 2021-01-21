@@ -104,11 +104,13 @@ class Ui_editDialog(object):
 
         self.startingX = QSpinBox(self.layoutWidget)
         self.startingX.setObjectName(u"startingX")
+        self.startingX.setMaximum(0)
 
         self.horizontalLayout_2.addWidget(self.startingX)
 
         self.startingY = QSpinBox(self.layoutWidget)
         self.startingY.setObjectName(u"startingY")
+        self.startingY.setMaximum(0)
 
         self.horizontalLayout_2.addWidget(self.startingY)
 
