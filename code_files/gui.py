@@ -18,6 +18,8 @@ from random import randint
 
 
 class GalleryWindow(QMainWindow):
+    """Main window of the GUI.
+    Responsible for opening dialogs by clicking on an action."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainMenu()
@@ -29,7 +31,8 @@ class GalleryWindow(QMainWindow):
     def new_gallery(self):
         """Create a new gallery of photos.
         Open a dialog for gallery creation.
-        Wait for user to choose topic and number of photos from that topic to save in a gallery.
+        Wait for user to choose topic and number of photos
+        from that topic to save in a gallery.
         Open a dialog for the user to choose a directory.
         Download and save photos to the chosen directory.
         """
@@ -73,8 +76,10 @@ class GalleryWindow(QMainWindow):
     def edit_a_photo(self):
         """Edit a chosen photo.
         Open a dialog and wait for the user to choose photo to be edited.
-        Open a dialog where the photo will be displayed, along with effects for the user to choose from.
-        Save the edited file under the same name to overwrite the original file.
+        Open a dialog where the photo will be displayed,
+        along with effects for the user to choose from.
+        Save the edited file under the same name
+        to overwrite the original file.
         """
         edit_dialog = EditDialog(self)
         edit_dialog.exec()
@@ -83,6 +88,10 @@ class GalleryWindow(QMainWindow):
 
 
 class EditDialog(QDialog):
+    """A dialog responsible for editing photos.
+    Displays possible effects and a photo chosen by the user that changes
+    every time the user adds an effect to reflect it.
+    """
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_editDialog()
@@ -96,7 +105,7 @@ class EditDialog(QDialog):
         for item in ['90', '180', '270', '360']:
             self.ui.comboBoxDegrees.addItem(item)
         for item in ['left', 'right']:
-            self.ui.comboBoxDirection.addItem(item)
+            self.ui.comboBoxDir.addItem(item)
         self.photo_to_label()
         self.ui.blurChange.clicked.connect(self.blur_photo)
         self.ui.cropChange.clicked.connect(self.crop_photo)
@@ -132,7 +141,10 @@ class EditDialog(QDialog):
         photo_data = photo_to_numpy(self.photo)
         self.photo = rotate(photo_data,
                             ((self.ui.comboBoxDegrees.currentIndex() + 1)
-                             * ((-1) ** self.ui.comboBoxDirection.currentIndex())))
+                             * (
+                                (-1) ** self.ui.comboBoxDir.currentIndex()
+                                )
+                             ))
         self.photo_to_label()
 
     def blur_photo(self):
@@ -147,6 +159,8 @@ class EditDialog(QDialog):
 
 
 class GalleryDialog(QDialog):
+    """Dialog responsible for creating a new gallery.
+    Displays possible topics to choose from."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_NewGallery()
@@ -161,6 +175,11 @@ class GalleryDialog(QDialog):
 
 
 class CollageDialog(QDialog):
+    """Dialog responsible for creating a collage out of photos.
+    Displays options for specifying which photos to use
+    along with the number of them,
+    how many rows the collage should have,
+    and how many pictures does every row include."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_NewCollage()
@@ -169,7 +188,8 @@ class CollageDialog(QDialog):
         self.ui.photosNumber.valueChanged.connect(self.change_noofrows_value)
 
     def choose_gallery(self):
-        """Wait for the user to choose a directory to fetch photos from and return the directory."""
+        """Wait for the user to choose a directory to fetch photos from
+        and return the directory."""
         choose_dir = OpenGallery(self)
         choose_dir.exec()
         if choose_dir.result():
@@ -178,11 +198,13 @@ class CollageDialog(QDialog):
             return self.chosen_gallery
 
     def change_noofrows_value(self):
-        """Change the number of possible rows that the collage can have dynamically, corresponding to the number of photos in the collage."""
+        """Change the number of possible rows that the collage can have
+        dynamically, corresponding to the number of photos in the collage."""
         self.ui.NoOfRows.setMaximum(self.ui.photosNumber.value())
 
     def list_of_pics_per_row(self):
-        """Get the number of photos that should be placed in each row, then return a list containing the numbers."""
+        """Get the number of photos that should be placed in each row,
+        then return a list containing the numbers."""
         self.list_pics_per_row = [int(number)
                                   for number
                                   in self.ui.NoOfPics.toPlainText().split(", ")
@@ -191,6 +213,7 @@ class CollageDialog(QDialog):
 
 
 class SaveGallery(QFileDialog):
+    """FileDialog responsible for saving a gallery to an existing directory."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFileMode(QFileDialog.Directory)
@@ -203,6 +226,8 @@ class SaveGallery(QFileDialog):
 
 
 class OpenGallery(QFileDialog):
+    """FileDialog responsible for opening a folder
+    that contains a gallery of photos."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFileMode(QFileDialog.Directory)
@@ -215,6 +240,7 @@ class OpenGallery(QFileDialog):
 
 
 class OpenPhoto(QFileDialog):
+    """FileDialog responsible for selecting a photo to use for editing."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.fileName = QFileDialog.getOpenFileName(self,
@@ -227,6 +253,8 @@ class OpenPhoto(QFileDialog):
 
 
 class SaveCollage(QFileDialog):
+    """FileDialog responsible for letting the user
+    provide a name for a collage."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.fileName = QFileDialog.getSaveFileName(self,
