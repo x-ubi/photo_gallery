@@ -59,12 +59,12 @@ class Ui_editDialog(object):
 
         self.horizontalLayout.addWidget(self.label_2)
 
-        self.comboBoxDirection = QComboBox(self.layoutWidget)
-        self.comboBoxDirection.setObjectName(u"comboBoxDirection")
-        sizePolicy.setHeightForWidth(self.comboBoxDirection.sizePolicy().hasHeightForWidth())
-        self.comboBoxDirection.setSizePolicy(sizePolicy)
+        self.comboBoxDir = QComboBox(self.layoutWidget)
+        self.comboBoxDir.setObjectName(u"comboBoxDir")
+        sizePolicy.setHeightForWidth(self.comboBoxDir.sizePolicy().hasHeightForWidth())
+        self.comboBoxDir.setSizePolicy(sizePolicy)
 
-        self.horizontalLayout.addWidget(self.comboBoxDirection)
+        self.horizontalLayout.addWidget(self.comboBoxDir)
 
         self.rotateChange = QPushButton(self.layoutWidget)
         self.rotateChange.setObjectName(u"rotateChange")
