@@ -1,11 +1,8 @@
 import requests
-# import json
 
 
 def get_topics(url):
-    """
-    This function receives the list of topics present on the server.
-    """
+    """Receive the list of topics present on the server."""
     response = requests.get(url).json()
     list_of_topics = [Topic(topic) for topic in response]
     return list_of_topics
@@ -17,8 +14,6 @@ class Topic:
     an id,
     a title,
     the number of photos in it.
-    TODO:
-    1. When GUI implemented, also store a link to a thumbnail for the topic.
     """
     def __init__(self, data):
         self._id = data['id']

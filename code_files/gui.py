@@ -295,12 +295,17 @@ def photo_to_numpy(photo):
 
 
 def generate_photo(photo):
+    """Save a photo to a buffer.
+    Keyword arguments:
+    photo -- a given photo to save into buffer
+    """
     buffer = BytesIO()
     photo.save(buffer, "JPEG")
     return buffer.getvalue()
 
 
 def guiMain(args):
+    """Main function"""
     app = QApplication(args)
     window = GalleryWindow()
     window.show()
