@@ -14,6 +14,7 @@ import numpy as np
 import json
 import requests
 from io import BytesIO
+from random import randint
 
 
 class GalleryWindow(QMainWindow):
@@ -26,36 +27,58 @@ class GalleryWindow(QMainWindow):
         self.ui.action_Edit_photos.triggered.connect(self.edit_a_photo)
 
     def new_gallery(self):
+        """Create a new gallery of photos.
+        Open a dialog for gallery creation.
+        Wait for user to choose topic and number of photos from that topic to save in a gallery.
+        Open a dialog for the user to choose a directory.
+        Download and save photos to the chosen directory.
+        """
         creation_dialog = GalleryDialog(self)
         creation_dialog.exec()
-        if creation_dialog.accepted:
+        if creation_dialog.result():
             topics = creation_dialog.get_list_of_topics()
             chosen_topic_index = creation_dialog.ui.topicsList.currentIndex()
             chosen_topic_id = topics[chosen_topic_index].id()
             number_of_photos = creation_dialog.ui.spinBox.value()
-            list_of_photos = photos_list(chosen_topic_id, number_of_photos, 1)
+            list_of_photos = photos_list(chosen_topic_id,
+                                         number_of_photos, randint(1, 5))
             save_dialog = SaveGallery(self)
             save_dialog.exec()
-            if save_dialog.accepted:
+            if save_dialog.result():
                 selected_folder = save_dialog.selected_folder()
                 download_photos(selected_folder, list_of_photos)
 
     def collage(self):
+        """Create a collage.
+        Open a dialog and wait for the user to choose a directory where
+        the photos will be fetched from.
+        Open a dialog for collage creation.
+        Wait for user to choose how many photos, specify the number of rows
+        and how many pictures there should be in each row.
+        Create a collage using the information provided by the user.
+        Open a dialog and wait for the user to name the collage.
+        Save the collage under the chosen name.
+        """
         creation_dialog = CollageDialog(self)
         creation_dialog.exec()
-        if creation_dialog.accepted:
+        if creation_dialog.result():
             chosen_gallery = creation_dialog.chosen_gallery
             save_dialog = SaveCollage(self)
-            if save_dialog.accepted:
+            if save_dialog.result():
                 collage(chosen_gallery,
                         save_dialog.get_filename(),
                         creation_dialog.ui.NoOfRows.value(),
                         creation_dialog.list_of_pics_per_row())
 
     def edit_a_photo(self):
+        """Edit a chosen photo.
+        Open a dialog and wait for the user to choose photo to be edited.
+        Open a dialog where the photo will be displayed, along with effects for the user to choose from.
+        Save the edited file under the same name to overwrite the original file.
+        """
         edit_dialog = EditDialog(self)
         edit_dialog.exec()
-        if edit_dialog.accepted:
+        if edit_dialog.result():
             edit_dialog.photo.save(edit_dialog.filename)
 
 
@@ -70,6 +93,10 @@ class EditDialog(QDialog):
         while self.photo.height > 900:
             width, height = self.photo.size
             self.photo = self.photo.resize((width // 2, height // 2))
+        for item in ['90', '180', '270', '360']:
+            self.ui.comboBoxDegrees.addItem(item)
+        for item in ['left', 'right']:
+            self.ui.comboBoxDirection.addItem(item)
         self.photo_to_label()
         self.ui.blurChange.clicked.connect(self.blur_photo)
         self.ui.cropChange.clicked.connect(self.crop_photo)
@@ -77,18 +104,21 @@ class EditDialog(QDialog):
         self.ui.blackWhite.pressed.connect(self.bw_photo)
 
     def get_photo(self):
+        """Get the name of the photo from user."""
         while not self.filename:
             open_photo = OpenPhoto()
             self.filename = open_photo.get_filename()
         return self.filename
 
     def photo_to_label(self):
+        """Display the photo on a QLabel object inside the dialog."""
         photo_buffer = generate_photo(self.photo)
         pixmap = QPixmap()
         pixmap.loadFromData(photo_buffer)
         self.ui.photoDisplay.setPixmap(pixmap)
 
     def crop_photo(self):
+        """Crop the photo, then display it on screen."""
         photo_data = photo_to_numpy(self.photo)
         self.photo = crop(photo_data,
                           self.ui.newWidth.value(),
@@ -98,16 +128,20 @@ class EditDialog(QDialog):
         self.photo_to_label()
 
     def rotate_photo(self):
+        """Rotate the photo, then display it on screen."""
         photo_data = photo_to_numpy(self.photo)
         self.photo = rotate(photo_data,
-                            (self.ui.comboBoxDegrees.currentIndex() + 1))
+                            ((self.ui.comboBoxDegrees.currentIndex() + 1)
+                             * ((-1) ** self.ui.comboBoxDirection.currentIndex())))
         self.photo_to_label()
 
     def blur_photo(self):
+        """Blur the photo, then display it on screen."""
         self.photo = gaussianblur(self.photo, self.ui.blurRadius.value())
         self.photo_to_label()
 
     def bw_photo(self):
+        """Make the photo black and white, then display it on screen."""
         self.photo = black_and_white(self.photo)
         self.photo_to_label()
 
@@ -122,6 +156,7 @@ class GalleryDialog(QDialog):
             self.ui.topicsList.addItem(str(topic))
 
     def get_list_of_topics(self):
+        """Return list of topics provided by the API."""
         return self.list_of_topics
 
 
@@ -134,17 +169,20 @@ class CollageDialog(QDialog):
         self.ui.photosNumber.valueChanged.connect(self.change_noofrows_value)
 
     def choose_gallery(self):
+        """Wait for the user to choose a directory to fetch photos from and return the directory."""
         choose_dir = OpenGallery(self)
         choose_dir.exec()
-        if choose_dir.accepted:
+        if choose_dir.result():
             self.chosen_gallery = choose_dir.selected_folder()
             self.ui.Directory.setPlainText(self.chosen_gallery)
             return self.chosen_gallery
 
     def change_noofrows_value(self):
+        """Change the number of possible rows that the collage can have dynamically, corresponding to the number of photos in the collage."""
         self.ui.NoOfRows.setMaximum(self.ui.photosNumber.value())
 
     def list_of_pics_per_row(self):
+        """Get the number of photos that should be placed in each row, then return a list containing the numbers."""
         self.list_pics_per_row = [int(number)
                                   for number
                                   in self.ui.NoOfPics.toPlainText().split(", ")
@@ -160,6 +198,7 @@ class SaveGallery(QFileDialog):
         self.setOption(QFileDialog.ShowDirsOnly, True)
 
     def selected_folder(self):
+        """Return selected directory."""
         return self.selectedFiles()[0]
 
 
@@ -171,6 +210,7 @@ class OpenGallery(QFileDialog):
         self.setOption(QFileDialog.ShowDirsOnly, True)
 
     def selected_folder(self):
+        """Return selected directory."""
         return self.selectedFiles()[0]
 
 
@@ -182,6 +222,7 @@ class OpenPhoto(QFileDialog):
                                                     self.tr("Images (*.jpg)"))
 
     def get_filename(self):
+        """Return selected photo."""
         return self.fileName[0]
 
 
@@ -191,18 +232,23 @@ class SaveCollage(QFileDialog):
         self.fileName = QFileDialog.getSaveFileName(self,
                                                     self.tr("Save As"), "",
                                                     self.tr("Images (*.jpg)"))
+        if self.fileName:
+            self.setResult(1)
 
     def get_filename(self):
+        """Return selected file."""
         return self.fileName[0]
 
 
 def get_data_from_json_file():
+    """Get data from a .json file, then return it."""
     with open("api.json") as file:
         data = json.load(file)
         return data
 
 
 def topics_list():
+    """Get the topics list from the server, then return it."""
     data = get_data_from_json_file()
     url_topics = data["topic-fetching-url"]
     list_of_topics = get_topics(url_topics)
@@ -210,6 +256,12 @@ def topics_list():
 
 
 def photos_list(given_id, given_number, given_page):
+    """Get the list of photos from the server, then return it.
+    Keyword arguments:
+    given_id -- client id necessary to fetch the photos
+    given_number -- number of photos to fetch
+    given_page -- the page number to fetch the photos from
+    """
     data = get_data_from_json_file()
     url_photos = data["photo-fetching-url"]
     list_of_photos = fetch_photos_of_topic(url_photos,
@@ -220,6 +272,11 @@ def photos_list(given_id, given_number, given_page):
 
 
 def download_photos(selected_folder, list_of_photos):
+    """Download photos of the selected list to a folder.
+    Keyword arguments:
+    selected_folder -- directory where the photos will be saved
+    list_of_photos -- list of photos to download
+    """
     for photo in list_of_photos:
         photo_download_url = photo['urls']['regular']
         downloaded_photo = requests.get(photo_download_url,
@@ -229,6 +286,10 @@ def download_photos(selected_folder, list_of_photos):
 
 
 def photo_to_numpy(photo):
+    """Make a numpy array out of a given photo.
+    Keyword arguments:
+    photo -- a given photo to make into an array
+    """
     photo_data = np.array(photo)
     return photo_data
 
