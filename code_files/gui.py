@@ -106,11 +106,25 @@ class EditDialog(QDialog):
             self.ui.comboBoxDegrees.addItem(item)
         for item in ['left', 'right']:
             self.ui.comboBoxDir.addItem(item)
+        self.ui.newWidth.setMaximum(self.photo.width)
+        self.ui.newHeight.setMaximum(self.photo.height)
         self.photo_to_label()
         self.ui.blurChange.clicked.connect(self.blur_photo)
         self.ui.cropChange.clicked.connect(self.crop_photo)
         self.ui.rotateChange.clicked.connect(self.rotate_photo)
         self.ui.blackWhite.pressed.connect(self.bw_photo)
+        self.ui.newWidth.valueChanged.connect(self.set_max_startingx)
+        self.ui.newHeight.valueChanged.connect(self.set_max_startingy)
+
+    def set_max_startingx(self):
+        """Set maximum value of starting x coordinate."""
+        self.ui.startingX.setMaximum(self.photo.width
+                                     - self.ui.newWidth.value())
+
+    def set_max_startingy(self):
+        """Set maximum value of starting y coordinate."""
+        self.ui.startingY.setMaximum(self.photo.height
+                                     - self.ui.newHeight.value())
 
     def get_photo(self):
         """Get the name of the photo from user."""
