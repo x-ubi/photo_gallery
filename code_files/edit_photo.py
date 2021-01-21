@@ -11,7 +11,8 @@ def crop(image_data, width, height, starting_x, starting_y):
     starting_x -- a starting point for the crop on the x axis
     starting_y -- a starting point for the crop on the y axis
     """
-    cropped_image_data = image_data[starting_y:height, starting_x:width, :]
+    cropped_image_data = image_data[starting_y:height+starting_y,
+                                    starting_x:width+starting_x, :]
     cropped_image = Image.fromarray(cropped_image_data)
     return cropped_image
 
