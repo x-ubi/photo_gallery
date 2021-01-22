@@ -88,11 +88,13 @@ class Ui_editDialog(object):
 
         self.newWidth = QSpinBox(self.layoutWidget)
         self.newWidth.setObjectName(u"newWidth")
+        self.newWidth.setMinimum(1)
 
         self.horizontalLayout_2.addWidget(self.newWidth)
 
         self.newHeight = QSpinBox(self.layoutWidget)
         self.newHeight.setObjectName(u"newHeight")
+        self.newHeight.setMinimum(1)
 
         self.horizontalLayout_2.addWidget(self.newHeight)
 

@@ -15,6 +15,7 @@ import json
 import requests
 from io import BytesIO
 from random import randint
+from math import ceil
 
 
 class GalleryWindow(QMainWindow):
@@ -62,16 +63,21 @@ class GalleryWindow(QMainWindow):
         Open a dialog and wait for the user to name the collage.
         Save the collage under the chosen name.
         """
-        creation_dialog = CollageDialog(self)
-        creation_dialog.exec()
-        if creation_dialog.result():
-            chosen_gallery = creation_dialog.chosen_gallery
-            save_dialog = SaveCollage(self)
-            if save_dialog.result():
-                collage(chosen_gallery,
-                        save_dialog.get_filename(),
-                        creation_dialog.ui.NoOfRows.value(),
-                        creation_dialog.list_of_pics_per_row())
+        creation = CollageDialog(self)
+        creation.exec()
+        gallery_exists = False
+        while not gallery_exists:
+            if creation.result() and creation.chosen_gallery is not None:
+                gallery_exists = True
+                chosen_gallery = creation.chosen_gallery
+                save_dialog = SaveCollage(self)
+                if save_dialog.result():
+                    collage(chosen_gallery,
+                            save_dialog.get_filename(),
+                            creation.ui.photosNumber.value(),
+                            creation.ui.picsinRow.value())
+            elif creation.result():
+                creation.exec()
 
     def edit_a_photo(self):
         """Edit a chosen photo.
@@ -198,8 +204,9 @@ class CollageDialog(QDialog):
         super().__init__(parent)
         self.ui = Ui_NewCollage()
         self.ui.setupUi(self)
+        self.chosen_gallery = None
         self.ui.chooseDir.clicked.connect(self.choose_gallery)
-        self.ui.photosNumber.valueChanged.connect(self.change_noofrows_value)
+        self.ui.photosNumber.valueChanged.connect(self.change_pics_value)
 
     def choose_gallery(self):
         """Wait for the user to choose a directory to fetch photos from
@@ -211,19 +218,9 @@ class CollageDialog(QDialog):
             self.ui.Directory.setPlainText(self.chosen_gallery)
             return self.chosen_gallery
 
-    def change_noofrows_value(self):
-        """Change the number of possible rows that the collage can have
-        dynamically, corresponding to the number of photos in the collage."""
-        self.ui.NoOfRows.setMaximum(self.ui.photosNumber.value())
-
-    def list_of_pics_per_row(self):
-        """Get the number of photos that should be placed in each row,
-        then return a list containing the numbers."""
-        self.list_pics_per_row = [int(number)
-                                  for number
-                                  in self.ui.NoOfPics.toPlainText().split(", ")
-                                  ]
-        return self.list_pics_per_row
+    def change_pics_value(self):
+        """Change maximum amount of photos in a singular row of collage."""
+        self.ui.picsinRow.setMaximum(ceil(self.ui.photosNumber.value() / 2))
 
 
 class SaveGallery(QFileDialog):
@@ -300,7 +297,7 @@ def topics_list():
 def photos_list(given_id, given_number, given_page):
     """Get the list of photos from the server, then return it.
     Keyword arguments:
-    given_id -- client id necessary to fetch the photos
+    given_id -- topic id
     given_number -- number of photos to fetch
     given_page -- the page number to fetch the photos from
     """
