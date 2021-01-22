@@ -1,12 +1,12 @@
 import requests
-import fetching_topic
+from fetching_topic import get_topics
 import json
 
 
 def test_response():
     with open('api.json') as file:
         data = json.load(file)
-        url = data['url']
+        url = data['topic-fetching-url']
         response = requests.get(url)
         assert response.status_code == 200
 
@@ -14,6 +14,6 @@ def test_response():
 def test_get_topics():
     with open('api.json') as file:
         data = json.load(file)
-        url = data['url']
-        list_of_topics = fetching_topic.get_topics(url)
-        assert list_of_topics == []
+        url = data['topic-fetching-url']
+        list_of_topics = get_topics(url)
+        assert len(list_of_topics) == 25
