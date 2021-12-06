@@ -1,6 +1,6 @@
 import requests
 import json
-from fetching_photos import fetch_photos_of_topic
+from code_files.fetching_photos import fetch_photos_of_topic
 
 
 def test_response():

@@ -1,5 +1,5 @@
 import requests
-from fetching_topic import get_topics
+from code_files.fetching_topic import get_topics
 import json
 
 

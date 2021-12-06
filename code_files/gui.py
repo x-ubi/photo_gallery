@@ -1,10 +1,11 @@
 from PySide2.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
 from PySide2.QtGui import QPixmap
 import sys
-from ui_MainMenu import Ui_MainMenu
-from ui_NewGallery import Ui_NewGallery
-from ui_NewCollage import Ui_NewCollage
-from ui_EditPhoto import Ui_editDialog
+from pathlib import Path
+from ui.ui_MainMenu import Ui_MainMenu
+from ui.ui_NewGallery import Ui_NewGallery
+from ui.ui_NewCollage import Ui_NewCollage
+from ui.ui_EditPhoto import Ui_editDialog
 from fetching_topic import get_topics
 from fetching_photos import fetch_photos_of_topic
 from collage_maker import collage
@@ -281,7 +282,7 @@ class SaveCollage(QFileDialog):
 
 def get_data_from_json_file():
     """Get data from a .json file, then return it."""
-    with open("api.json") as file:
+    with open(f"{Path(__file__).parent}/api.json") as file:
         data = json.load(file)
         return data
 
