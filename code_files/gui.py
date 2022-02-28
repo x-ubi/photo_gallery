@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
-from PySide2.QtGui import QPixmap
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QFileDialog
+from PySide6.QtGui import QPixmap
 import sys
 from pathlib import Path
 from ui.ui_MainMenu import Ui_MainMenu
@@ -109,6 +109,7 @@ class EditDialog(QDialog):
         while self.photo.height > 900:
             width, height = self.photo.size
             self.photo = self.photo.resize((width // 2, height // 2))
+        self.photo_buffer = self.photo
         for item in ['90', '180', '270', '360']:
             self.ui.comboBoxDegrees.addItem(item)
         for item in ['left', 'right']:
@@ -119,7 +120,7 @@ class EditDialog(QDialog):
         self.ui.blurChange.clicked.connect(self.blur_photo)
         self.ui.cropChange.clicked.connect(self.crop_photo)
         self.ui.rotateChange.clicked.connect(self.rotate_photo)
-        self.ui.blackWhite.pressed.connect(self.bw_photo)
+        self.ui.blackWhite.stateChanged.connect(self.bw_photo)
         self.ui.newWidth.valueChanged.connect(self.set_max_startingx)
         self.ui.newHeight.valueChanged.connect(self.set_max_startingy)
 
@@ -175,7 +176,11 @@ class EditDialog(QDialog):
 
     def bw_photo(self):
         """Make the photo black and white, then display it on screen."""
-        self.photo = black_and_white(self.photo)
+        if self.ui.blackWhite.isChecked():
+            self.photo_buffer = self.photo
+            self.photo = black_and_white(self.photo)
+        else:
+            self.photo = self.photo_buffer
         self.photo_to_label()
 
 
@@ -349,7 +354,7 @@ def guiMain(args):
     app = QApplication(args)
     window = GalleryWindow()
     window.show()
-    return app.exec_()
+    return app.exec()
 
 
 if __name__ == "__main__":
