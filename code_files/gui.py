@@ -53,6 +53,7 @@ class GalleryWindow(QMainWindow):
                 selected_folder = save_dialog.selected_folder()
                 download_photos(selected_folder, list_of_photos)
 
+
     def collage(self):
         """Create a collage.
         Open a dialog and wait for the user to choose a directory where
@@ -65,9 +66,9 @@ class GalleryWindow(QMainWindow):
         Save the collage under the chosen name.
         """
         creation = CollageDialog(self)
-        creation.exec()
         gallery_exists = False
         while not gallery_exists:
+            creation.exec()
             if creation.result() and creation.chosen_gallery is not None:
                 gallery_exists = True
                 chosen_gallery = creation.chosen_gallery
@@ -77,8 +78,8 @@ class GalleryWindow(QMainWindow):
                             save_dialog.get_filename(),
                             creation.ui.photosNumber.value(),
                             creation.ui.picsinRow.value())
-            elif creation.result():
-                creation.exec()
+            elif not creation.result():
+                break
 
     def edit_a_photo(self):
         """Edit a chosen photo.

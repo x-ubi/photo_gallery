@@ -69,4 +69,4 @@ def collage(folder_with_photos,
     collage_final = collage_filled[0].crop((0, 0,
                                            no_pics_per_row*image_width,
                                            max(collage_filled[1])))
-    collage_final.save(f"{name_for_collage}.jpg", "JPEG")
+    collage_final.save(f"{name_for_collage}", "JPEG")
