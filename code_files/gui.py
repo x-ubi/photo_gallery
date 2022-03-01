@@ -9,7 +9,7 @@ from ui.ui_EditPhoto import Ui_editDialog
 from fetching_topic import get_topics
 from fetching_photos import fetch_photos_of_topic
 from collage_maker import collage
-from edit_photo import crop, rotate, black_and_white, gaussianblur
+from edit_photo import crop, rotate, black_and_white, gaussian_blur
 from PIL import Image
 import numpy as np
 import json
@@ -163,15 +163,13 @@ class EditDialog(QDialog):
         photo_data = photo_to_numpy(self.photo)
         self.photo = rotate(photo_data,
                             ((self.ui.comboBoxDegrees.currentIndex() + 1)
-                             * (
-                                (-1) ** self.ui.comboBoxDir.currentIndex()
-                                )
+                             * ((-1) ** self.ui.comboBoxDir.currentIndex())
                              ))
         self.photo_to_label()
 
     def blur_photo(self):
         """Blur the photo, then display it on screen."""
-        self.photo = gaussianblur(self.photo, self.ui.blurRadius.value())
+        self.photo = gaussian_blur(self.photo, self.ui.blurRadius.value())
         self.photo_to_label()
 
     def bw_photo(self):

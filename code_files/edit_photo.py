@@ -28,7 +28,7 @@ def rotate(image_data, times_to_rotate):
     return rotated_image
 
 
-def gaussianblur(image, chosen_r=2):
+def gaussian_blur(image, chosen_r=2):
     """Blur an image and return the blurred version.
     Keyword arguments:
     image -- a PIL Image object that is to be blurred
