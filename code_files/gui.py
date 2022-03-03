@@ -137,9 +137,9 @@ class EditDialog(QDialog):
 
     def get_photo(self):
         """Get the name of the photo from user."""
-        while not self.filename:
-            open_photo = OpenPhoto()
-            self.filename = open_photo.get_filename()
+        # while not self.filename:
+        open_photo = OpenPhoto()
+        self.filename = open_photo.get_filename()
         return self.filename
 
     def photo_to_label(self):
@@ -165,7 +165,8 @@ class EditDialog(QDialog):
         self.photo = rotate(photo_data,
                             ((self.ui.comboBoxDegrees.currentIndex() + 1)
                              * ((-1) ** self.ui.comboBoxDir.currentIndex())
-                             ))
+                             )
+                            )
         self.photo_to_label()
 
     def blur_photo(self):
@@ -259,13 +260,13 @@ class OpenPhoto(QFileDialog):
     """FileDialog responsible for selecting a photo to use for editing."""
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.fileName = QFileDialog.getOpenFileName(self,
-                                                    self.tr("Open File"), "",
-                                                    self.tr("Images (*.jpg)"))
+        self.fileName = self.getOpenFileName(self,
+                                             self.tr("Open File"), "",
+                                             self.tr("Images (*.jpg)"))
 
     def get_filename(self):
         """Return selected photo."""
-        return self.fileName[0]
+        return self.fileName[0] if self.fileName[0] else None
 
 
 class SaveCollage(QFileDialog):
@@ -273,9 +274,9 @@ class SaveCollage(QFileDialog):
     provide a name for a collage."""
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.fileName = QFileDialog.getSaveFileName(self,
-                                                    self.tr("Save As"), "",
-                                                    self.tr("Images (*.jpg)"))
+        self.fileName = self.getSaveFileName(self,
+                                             self.tr("Save As"), "",
+                                             self.tr("Images (*.jpg)"))
         if self.fileName:
             self.setResult(1)
 
