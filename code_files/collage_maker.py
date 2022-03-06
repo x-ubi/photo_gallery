@@ -10,12 +10,12 @@ def collage_aux(list_of_all_photos,
                 no_of_rows):
     """Make the actual collage.
     Keyword arguments:
-    list_of_all_photos -- a list of photos to be included in collage
-    no_pics_per_row -- number of photos,
+    list_of_all_photos - a list of photos to be included in collage
+    no_pics_per_row - number of photos,
     that the collage will fit in one row
-    no_of_photos -- number of photos in the collage
-    collage_background -- a white Image object to put the photos on
-    no_of_rows -- number of rows in the collage
+    no_of_photos - number of photos in the collage
+    collage_background - a white Image object to put the photos on
+    no_of_rows - number of rows in the collage
     """
     list_of_heights = []
     list_of_photos_sorted_up = sorted(list_of_all_photos,
