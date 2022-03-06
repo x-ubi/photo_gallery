@@ -17,7 +17,7 @@ def collage_aux(list_of_all_photos,
     collage_background - a white Image object to put the photos on
     no_of_rows - number of rows in the collage
     """
-    list_of_heights = []
+    ''' list_of_heights = []
     list_of_photos_sorted_up = sorted(list_of_all_photos,
                                       key=lambda x: x.height)
     list_of_photos_sorted_down = sorted(list_of_all_photos,
@@ -34,6 +34,25 @@ def collage_aux(list_of_all_photos,
                                       list_of_heights[pic_no]))
             list_of_heights[pic_no] += photo.height
             (list_of_photos_sorted_up.pop(0) if row % 2
+             else list_of_photos_sorted_down.pop(0))
+            total_pics_counter += 1
+            if total_pics_counter == no_of_photos:
+                break'''
+    list_of_heights = []
+    list_of_photos_sorted_down = sorted(list_of_all_photos,
+                                        key=lambda x: x.height, reverse=True)
+    for _ in range(no_pics_per_row):
+        list_of_heights.append(0)
+    total_pics_counter = 0
+    for row in range(no_of_rows):
+        for pic_no in range(no_pics_per_row):
+            photo = (list_of_photos_sorted_down[-1] if row % 2
+                     else list_of_photos_sorted_down[0])
+            collage_background.paste(photo,
+                                     (pic_no*photo.width,
+                                      list_of_heights[pic_no]))
+            list_of_heights[pic_no] += photo.height
+            (list_of_photos_sorted_down.pop() if row % 2
              else list_of_photos_sorted_down.pop(0))
             total_pics_counter += 1
             if total_pics_counter == no_of_photos:
