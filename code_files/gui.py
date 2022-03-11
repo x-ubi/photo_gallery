@@ -318,8 +318,8 @@ def photos_list(given_id, given_number, given_page):
 def download_photos(selected_folder, list_of_photos):
     """Download photos of the selected list to a folder.
     Keyword arguments:
-    selected_folder -- directory where the photos will be saved
-    list_of_photos -- list of photos to download
+    selected_folder - directory where the photos will be saved
+    list_of_photos - list of photos to download
     """
     for photo in list_of_photos:
         photo_download_url = photo['urls']['regular']
