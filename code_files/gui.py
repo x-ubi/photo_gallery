@@ -59,7 +59,7 @@ class GalleryWindow(QMainWindow):
         Open a dialog and wait for the user to choose a directory where
         the photos will be fetched from.
         Open a dialog for collage creation.
-        Wait for user to choose how many photos, specify the number of rows
+        Wait for user to choose how many photos, specify the number of rows,
         and how many pictures there should be in each row.
         Create a collage using the information provided by the user.
         Open a dialog and wait for the user to name the collage.
