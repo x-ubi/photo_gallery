@@ -137,7 +137,6 @@ class EditDialog(QDialog):
 
     def get_photo(self):
         """Get the name of the photo from user."""
-        # while not self.filename:
         open_photo = OpenPhoto()
         self.filename = open_photo.get_filename()
         return self.filename
