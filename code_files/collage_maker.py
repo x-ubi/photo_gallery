@@ -45,10 +45,10 @@ def collage(folder_with_photos,
             no_pics_per_row=1):
     """Create a collage out of given photos.
     Keyword arguments:
-    folder_with_photos -- path to a folder with photos inside of it
-    name_for_collage -- name for the newly made collage
-    no_of_photos -- number of photos in the collage (default 2)
-    no_pics_per_row -- number of photos,
+    folder_with_photos - path to a folder with photos inside of it
+    name_for_collage - name for the newly made collage
+    no_of_photos - number of photos in the collage (default 2)
+    no_pics_per_row - number of photos,
     that the collage will fit in one row (default 1)
     """
     list_of_all_photos = [Image.open(f"{folder_with_photos}/{photo}") for photo
